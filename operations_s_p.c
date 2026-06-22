@@ -10,15 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "push_swap.h"
+
 void	sa(t_list **stack_a)
 {
 	int	i;
 
 	if (!stack_a || !*stack_a || !(*stack_a)->next)
 		return ;
-	i = *(int *)(*stack_a)->content;
-	*(int *)(*stack_a)->content = *(int *)(*stack_a)->next->content;
-	*(int *)(*stack_a)->next->content = i;
+	i = (*stack_a)->content;
+	(*stack_a)->content = (*stack_a)->next->content;
+	(*stack_a)->next->content = i;
 }
 
 void	sb(t_list **stack_b)
@@ -27,9 +29,9 @@ void	sb(t_list **stack_b)
 
 	if (!stack_b || !*stack_b || !(*stack_b)->next)
 		return ;
-	i = *(int *)(*stack_b)->content;
-	*(int *)(*stack_b)->content = *(int *)(*stack_b)->next->content;
-	*(int *)(*stack_b)->next->content = i;
+	i = (*stack_b)->content;
+	(*stack_b)->content = (*stack_b)->next->content;
+	(*stack_b)->next->content = i;
 }
 
 void	ss(t_list **stack_a, t_list **stack_b)

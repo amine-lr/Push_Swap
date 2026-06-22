@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "push_swap.h"
+#include <stddef.h>
+
 size_t  ft_strlen(const char *s)
 {
   size_t  num;
@@ -59,4 +62,36 @@ int ft_atoi(const char *nptr)
     return (0);
   num = ft_putnum(nptr, num, i, neg);
   return (num);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
+}
+
+void	ft_putnbr_fd(int n, int fd)
+{
+	char	c;
+
+	if (n < 0)
+	{
+		write(fd, "-", 1);
+		ft_putnbr_fd(-n, fd);
+	}
+	else if (n < 10)
+	{
+		c = n + '0';
+		write(fd, &c, 1);
+	}
+	else
+	{
+		ft_putnbr_fd(n / 10, fd);
+		c = (n % 10) + '0';
+		write(fd, &c, 1);
+	}
 }
