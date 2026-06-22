@@ -1,0 +1,135 @@
+1. The main Function & push_swap Call: 
+The Problem: * stack_a is allocated as a t_list, but its contents are never initialized.
+You are passing stack_a (a linked list pointer) into push_swap(), but push_swap expects an int * array.
+It also leaks the allocated array_a because it is never freed.
+
+❌ Broken Version:
+int main(int argc, char *argv[])
+{
+  int *array_a;
+  t_list  *stack_a;
+
+  stack_a = malloc(sizeof(t_list)); // Danger: uninitialized memory
+  if (!stack_a)
+    return (NULL);
+  array_a = transform_argv(argv, (argc - 1));
+  if(!array_a)
+    return (1);
+  ft_array_to_list(array_a, stack_a, (argc - 1));
+  push_swap(stack_a, (argc - 1)); // Type mismatch: passing t_list* to int*
+  return (0);
+}
+
+✅ Corrected Version:
+int main(int argc, char *argv[])
+{
+    int     *array_a;
+    t_list  *stack_a;
+    int     length;
+
+    if (argc < 2)
+        return (0);
+    length = argc - 1;
+    stack_a = NULL; // Start with an empty list pointer
+    array_a = transform_argv(argv, &length); // Pass pointer to length
+    if (!array_a)
+        return (1);
+    
+    // Pass the address of stack_a so the list can be built dynamically
+    ft_array_to_list(array_a, &stack_a, length);
+    
+    // Fix push_swap signature or pass the actual list pointer here
+    push_swap(&stack_a, length); 
+
+    // Clean up allocated array memory
+    free(array_a);
+    // Remember to write a function to free your linked list here before exiting!
+    return (0);
+}
+2. The ft_array_to_list Function
+The Problem: The original function takes t_list *stack_a instead of t_list stack_a. Because of this, it cannot modify the original pointer in main. It also incorrectly checks if (!*stack_a), which causes a compilation crash because stack_a is a single pointer, not a double pointer.
+
+❌ Broken Version:
+void  ft_array_to_list(int *array_a, t_list *stack_a, int length)
+{
+  // ...
+    if (!*stack_a) // Compilation Error: dereferencing a single pointer like a double pointer
+      *stack_a = new_node;
+    else
+    {
+      actual_node = *stack_a;
+  // ...
+
+✅ Corrected Version:
+void  ft_array_to_list(int *array_a, t_list **stack_a, int length)
+{
+    t_list  *new_node;
+    t_list  *actual_node;
+    int     i;
+
+    i = 0;
+    while (i < length)
+    {
+        new_node = malloc(sizeof(t_list));
+        if (!new_node)
+            return ;
+        // Cast the integer value as a void pointer to store it in content
+        new_node->content = (void *)(long)array_a[i];
+        new_node->next = NULL;
+        
+        if (!*stack_a)
+            *stack_a = new_node;
+        else
+        {
+            actual_node = *stack_a;
+            while (actual_node->next)
+                actual_node = actual_node->next;
+            actual_node->next = new_node;
+        }
+        i++;
+    }
+}
+3. The push_swap Function Prototype
+The Problem: Your project is called push_swap because you are supposed to sort stack structures (t_list ), not basic integer arrays. The algorithm needs to receive the actual linked lists to execute operations like sa and pb.
+
+❌ Broken Version:
+
+C
+void  push_swap(int *stack_a, int length)
+{
+  int *stack_b;
+  // ...
+✅ Corrected Version:
+
+C
+void  push_swap(t_list **stack_a, int length)
+{
+    t_list *stack_b;
+    
+    stack_b = NULL;
+    if (length < 2)
+        return ;
+    
+    // Your sorting algorithm logic goes here, utilizing your rules:
+    // e.g., pb(stack_a, &stack_b);
+}
+4. The Rules (sa, sb, etc.)
+The Problem: Inside functions like sa, your partner accesses the node data like this: *(int *)(*stack_a)->content. This works only if content points to an allocated heap integer. However, a cleaner and standard way for push_swap is to cast the integer directly into the pointer variable slot (like I did in the corrected ft_array_to_list above) to avoid unnecessary malloc calls for every single number.
+
+❌ Broken Version:
+
+C
+i = *(int *)(*stack_a)->content; // Crashes if content is not a real allocated int* pointer
+✅ Corrected Version:
+
+C
+void    sa(t_list **stack_a)
+{
+    void    *temp;
+
+    if (!stack_a || !*stack_a || !(*stack_a)->next)
+        return ;
+    temp = (*stack_a)->content;
+    (*stack_a)->content = (*stack_a)->next->content;
+    (*stack_a)->next->content = temp;
+}
