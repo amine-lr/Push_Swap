@@ -1,21 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jangonza <jangonza@student.42urduliz.com>  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/20 00:00:00 by jangonza          #+#    #+#             */
-/*   Updated: 2026/06/20 00:00:00 by jangonza         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "push_swap.h"
 
-static int	is_strategy_flag(char *arg)
+static int	is_known_flag(char *arg)
 {
-	if (!arg)
-		return (0);
 	if (ft_strcmp(arg, "--simple") == 0)
 		return (1);
 	if (ft_strcmp(arg, "--medium") == 0)
@@ -29,17 +15,18 @@ static int	is_strategy_flag(char *arg)
 	return (0);
 }
 
-static t_strategy	get_strategy(char *flag)
+static void	apply_flag(t_flags *flags, char *arg)
 {
-	if (ft_strcmp(flag, "--simple") == 0)
-		return (SIMPLE);
-	if (ft_strcmp(flag, "--medium") == 0)
-		return (MEDIUM);
-	if (ft_strcmp(flag, "--complex") == 0)
-		return (COMPLEX);
-	if (ft_strcmp(flag, "--adaptive") == 0)
-		return (ADAPTIVE);
-	return (ADAPTIVE);
+	if (ft_strcmp(arg, "--simple") == 0)
+		flags->strategy = SIMPLE;
+	else if (ft_strcmp(arg, "--medium") == 0)
+		flags->strategy = MEDIUM;
+	else if (ft_strcmp(arg, "--complex") == 0)
+		flags->strategy = COMPLEX;
+	else if (ft_strcmp(arg, "--adaptive") == 0)
+		flags->strategy = ADAPTIVE;
+	else if (ft_strcmp(arg, "--bench") == 0)
+		flags->bench = 1;
 }
 
 t_flags	parse_flags(int argc, char **argv, int *start_index)
@@ -50,12 +37,9 @@ t_flags	parse_flags(int argc, char **argv, int *start_index)
 	flags.strategy = ADAPTIVE;
 	flags.bench = 0;
 	i = 1;
-	while (i < argc && is_strategy_flag(argv[i]))
+	while (i < argc && is_known_flag(argv[i]))
 	{
-		if (ft_strcmp(argv[i], "--bench") == 0)
-			flags.bench = 1;
-		else
-			flags.strategy = get_strategy(argv[i]);
+		apply_flag(&flags, argv[i]);
 		i++;
 	}
 	*start_index = i;

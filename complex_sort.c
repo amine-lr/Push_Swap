@@ -15,85 +15,115 @@
 static int	stack_length(t_list *stack)
 {
 	int		length;
-	t_list	*temp;
 
 	length = 0;
-	temp = stack;
-	while (temp)
+	while (stack)
 	{
 		length++;
-		temp = temp->next;
+		stack = stack->next;
 	}
 	return (length);
 }
 
-static int	find_max_bits(int *array, int length)
+static int	sqrt_approx(int n)
 {
-	int	max;
-	int	bits;
-	int	i;
+	int	result;
 
-	max = 0;
-	i = 0;
-	while (i < length)
-	{
-		if (array[i] > max)
-			max = array[i];
-		i++;
-	}
-	bits = 0;
-	if (max == 0)
-		return (1);
-	while (max > 0)
-	{
-		bits++;
-		max = max >> 1;
-	}
-	return (bits);
+	result = 1;
+	while (result * result < n)
+		result++;
+	return (result);
 }
 
-static void	radix_pass(t_list **stack_a, t_list **stack_b, 
-		int bit_pos, t_op_node **ops_head)
+static int	find_max_position(t_list *stack)
+{
+	int	max;
+	int	max_pos;
+	int	pos;
+
+	max = stack->content;
+	max_pos = 0;
+	pos = 0;
+	while (stack)
+	{
+		if (stack->content > max)
+		{
+			max = stack->content;
+			max_pos = pos;
+		}
+		stack = stack->next;
+		pos++;
+	}
+	return (max_pos);
+}
+
+static void	rotate_b_to_max(t_list **stack_b, t_op_node **ops_head)
 {
 	int	length;
-	int	i;
+	int	pos;
 
-	length = stack_length(*stack_a);
-	i = 0;
-	while (i < length)
+	length = stack_length(*stack_b);
+	pos = find_max_position(*stack_b);
+	if (pos <= length / 2)
 	{
-		if (((*stack_a)->content >> bit_pos) & 1)
+		while (pos-- > 0)
 		{
-			ra(stack_a);
-			record_operation(ops_head, "ra");
+			rb(stack_b);
+			record_operation(ops_head, "rb");
 		}
-		else
-		{
-			pb(stack_a, stack_b);
-			record_operation(ops_head, "pb");
-		}
-		i++;
 	}
-	while (*stack_b)
+	else
 	{
-		pa(stack_a, stack_b);
-		record_operation(ops_head, "pa");
+		pos = length - pos;
+		while (pos-- > 0)
+		{
+			rrb(stack_b);
+			record_operation(ops_head, "rrb");
+		}
 	}
 }
 
 void	complex_sort(t_list **stack_a, t_list **stack_b, 
 		int *array, int length, t_op_node **ops_head)
 {
-	int	max_bits;
-	int	bit_pos;
+	int	index;
+	int	window;
 
 	if (!stack_a || !stack_b || !array || length < 2)
 		return ;
-	max_bits = find_max_bits(array, length);
-	bit_pos = 0;
-	while (bit_pos < max_bits)
+	index = 0;
+	window = (sqrt_approx(length) * 13) / 10;
+	if (window < 1)
+		window = 1;
+	while (*stack_a)
 	{
-		radix_pass(stack_a, stack_b, bit_pos, ops_head);
-		bit_pos++;
+		if ((*stack_a)->content <= index)
+		{
+			pb(stack_a, stack_b);
+			record_operation(ops_head, "pb");
+			if (*stack_b && (*stack_b)->next)
+			{
+				rb(stack_b);
+				record_operation(ops_head, "rb");
+			}
+			index++;
+		}
+		else if ((*stack_a)->content <= index + window)
+		{
+			pb(stack_a, stack_b);
+			record_operation(ops_head, "pb");
+			index++;
+		}
+		else
+		{
+			ra(stack_a);
+			record_operation(ops_head, "ra");
+		}
+	}
+	while (*stack_b)
+	{
+		rotate_b_to_max(stack_b, ops_head);
+		pa(stack_a, stack_b);
+		record_operation(ops_head, "pa");
 	}
 }

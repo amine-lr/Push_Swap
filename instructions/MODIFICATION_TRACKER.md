@@ -81,6 +81,74 @@ Status:
 - Changes applied.
 - Awaiting user test results.
 
+### Subject-Focused Project Cleanup
+
+Files changed:
+- `Makefile`
+- `push_swap.h`
+- `push_swap.c`
+
+Files archived:
+- `instructions/archive/parser.c`
+- `instructions/archive/simple_sort.c`
+- `instructions/archive/medium_sort.c`
+- `instructions/archive/adaptive_sort.c`
+- `instructions/archive/benchmark.c`
+
+Changes made:
+- Removed experimental strategy files from the active `Makefile` build.
+- Removed flag/benchmark strategy dependencies from `push_swap.c`.
+- Updated `push_swap.c` so inputs larger than 5 always use the normalized radix path.
+- Removed unused strategy/benchmark declarations from `push_swap.h`.
+- Moved unused experimental files into `instructions/archive` instead of deleting them.
+
+Reason:
+- The subject requires `push_swap` to output sorting operations with strong performance, not extra runtime modes.
+- The `--simple`, `--medium`, `--adaptive`, and `--bench` paths were making the project harder to reason about.
+- `medium_sort` and the old adaptive selector were not reliable enough for the final project path.
+- Archiving keeps the root folder focused while preserving code for later reference.
+
+Status:
+- Changes applied.
+- Compilation not run after cleanup yet.
+
+### Mandatory Subject Feature Restoration
+
+Files changed:
+- `Makefile`
+- `push_swap.h`
+- `push_swap.c`
+- `comprobations.c`
+- `libft_utils.c`
+- `complex_sort.c`
+
+Files added:
+- `parser.c`
+- `strategies.c`
+- `benchmark.c`
+
+Changes made:
+- Restored support for `--simple`, `--medium`, `--complex`, and `--adaptive`.
+- Restored support for `--bench`.
+- Added clean flag parsing in `parser.c`.
+- Added mandatory strategy functions in `strategies.c`.
+- Added benchmark output to stderr in `benchmark.c`.
+- Fixed integer validation so `-2147483648` is valid.
+- Updated `ft_atoi` internals to safely parse `-2147483648`.
+- Added `ft_putstr_fd`.
+- Fixed normalization so negative values and mixed ranges rank correctly.
+- Changed the active complex strategy from plain radix to a K/chunk-style path aimed at lower operation counts.
+
+Reason:
+- The subject requires all four strategies to be embedded in the binary.
+- The subject requires optional benchmark mode.
+- `2147483647 -2147483648 0` must be accepted as valid input.
+- Plain radix produced good but not excellent operation counts for 500 numbers.
+
+Status:
+- Changes applied.
+- Compilation and runtime tests must be run from the user's WSL environment.
+
 ### Stable Adaptive Sorting Path
 
 File changed:

@@ -1,44 +1,28 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   benchmark.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jangonza <jangonza@student.42urduliz.com>  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/20 00:00:00 by jangonza          #+#    #+#             */
-/*   Updated: 2026/06/20 00:00:00 by jangonza         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "push_swap.h"
 
 static int	count_operations(t_op_node *ops, char *op_name)
 {
-	int		count;
-	t_op_node	*temp;
+	int	count;
 
 	count = 0;
-	temp = ops;
-	while (temp)
+	while (ops)
 	{
-		if (ft_strcmp(temp->operation, op_name) == 0)
+		if (ft_strcmp(ops->operation, op_name) == 0)
 			count++;
-		temp = temp->next;
+		ops = ops->next;
 	}
 	return (count);
 }
 
 static int	total_operations(t_op_node *ops)
 {
-	int		count;
-	t_op_node	*temp;
+	int	count;
 
 	count = 0;
-	temp = ops;
-	while (temp)
+	while (ops)
 	{
 		count++;
-		temp = temp->next;
+		ops = ops->next;
 	}
 	return (count);
 }
@@ -51,62 +35,69 @@ static char	*strategy_name(t_strategy strategy)
 		return ("medium");
 	if (strategy == COMPLEX)
 		return ("complex");
-	if (strategy == ADAPTIVE)
-		return ("adaptive");
-	return ("unknown");
+	return ("adaptive");
 }
 
-static char	*complexity_class(t_strategy strategy)
+static char	*complexity_name(t_strategy strategy)
 {
 	if (strategy == SIMPLE)
-		return ("O(n²)");
+		return ("O(n^2)");
 	if (strategy == MEDIUM)
-		return ("O(n√n)");
+		return ("O(n sqrt n)");
 	if (strategy == COMPLEX)
 		return ("O(n log n)");
-	if (strategy == ADAPTIVE)
-		return ("O(n log n)");
-	return ("unknown");
+	return ("adaptive");
+}
+
+static void	print_percent(double value)
+{
+	int	percent;
+
+	percent = (int)(value * 10000.0);
+	ft_putnbr_fd(percent / 100, 2);
+	write(2, ".", 1);
+	if ((percent % 100) < 10)
+		write(2, "0", 1);
+	ft_putnbr_fd(percent % 100, 2);
+	write(2, "%", 1);
 }
 
 void	benchmark_output(int *array, int length, t_flags flags, t_op_node *ops)
 {
 	double	disorder;
-	int		total_ops;
 
+	if (flags.bench == 0)
+		return ;
 	disorder = calculate_disorder_percentage(array, length);
-	write(2, "\n=== BENCHMARK ===\n", 19);
-	write(2, "Disorder: ", 10);
-	ft_putnbr_fd((int)(disorder * 100), 2);
-	write(2, "%\nStrategy: ", 12);
-	write(2, strategy_name(flags.strategy), ft_strlen(strategy_name(flags.strategy)));
-	write(2, " (", 2);
-	write(2, complexity_class(flags.strategy), ft_strlen(complexity_class(flags.strategy)));
-	write(2, ")\nTotal operations: ", 20);
-	total_ops = total_operations(ops);
-	ft_putnbr_fd(total_ops, 2);
-	write(2, "\nOperation breakdown:\n", 22);
-	write(2, "  sa: ", 6);
+	ft_putstr_fd("\n=== BENCHMARK ===\nDisorder: ", 2);
+	print_percent(disorder);
+	ft_putstr_fd("\nStrategy: ", 2);
+	ft_putstr_fd(strategy_name(flags.strategy), 2);
+	ft_putstr_fd(" (", 2);
+	ft_putstr_fd(complexity_name(flags.strategy), 2);
+	ft_putstr_fd(")\nTotal operations: ", 2);
+	ft_putnbr_fd(total_operations(ops), 2);
+	ft_putstr_fd("\nsa: ", 2);
 	ft_putnbr_fd(count_operations(ops, "sa"), 2);
-	write(2, " | sb: ", 7);
+	ft_putstr_fd(" sb: ", 2);
 	ft_putnbr_fd(count_operations(ops, "sb"), 2);
-	write(2, " | ss: ", 7);
+	ft_putstr_fd(" ss: ", 2);
 	ft_putnbr_fd(count_operations(ops, "ss"), 2);
-	write(2, "\n  pa: ", 7);
+	ft_putstr_fd("\npa: ", 2);
 	ft_putnbr_fd(count_operations(ops, "pa"), 2);
-	write(2, " | pb: ", 7);
+	ft_putstr_fd(" pb: ", 2);
 	ft_putnbr_fd(count_operations(ops, "pb"), 2);
-	write(2, "\n  ra: ", 7);
+	ft_putstr_fd("\nra: ", 2);
 	ft_putnbr_fd(count_operations(ops, "ra"), 2);
-	write(2, " | rb: ", 7);
+	ft_putstr_fd(" rb: ", 2);
 	ft_putnbr_fd(count_operations(ops, "rb"), 2);
-	write(2, " | rr: ", 7);
+	ft_putstr_fd(" rr: ", 2);
 	ft_putnbr_fd(count_operations(ops, "rr"), 2);
-	write(2, "\n  rra: ", 8);
+	ft_putstr_fd("\nrra: ", 2);
 	ft_putnbr_fd(count_operations(ops, "rra"), 2);
-	write(2, " | rrb: ", 8);
+	ft_putstr_fd(" rrb: ", 2);
 	ft_putnbr_fd(count_operations(ops, "rrb"), 2);
-	write(2, " | rrr: ", 8);
+	ft_putstr_fd(" rrr: ", 2);
 	ft_putnbr_fd(count_operations(ops, "rrr"), 2);
 	write(2, "\n", 1);
 }

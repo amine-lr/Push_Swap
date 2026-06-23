@@ -31,9 +31,6 @@ typedef struct s_op_node
 	struct s_op_node	*next;
 }	t_op_node;
 
-int		calculate_disorder(int *stack_a, int length);
-void	push_swap(t_list *stack_a, int length);
-int		main(int argc, char *argv[]);
 int		search_duplicates(int *stack_a, int length);
 int		stack_a_is_correct(char *stack_a);
 int		*transform_argv(char **argv, int *length);
@@ -44,6 +41,7 @@ size_t	ft_strlen(const char *s);
 int		ft_atoi(const char *nptr);
 int		ft_strcmp(const char *s1, const char *s2);
 void	ft_putnbr_fd(int n, int fd);
+void	ft_putstr_fd(char *str, int fd);
 t_flags	parse_flags(int argc, char **argv, int *start_index);
 void	simple_sort(t_list **stack_a, t_list **stack_b, t_op_node **ops_head);
 void	medium_sort(t_list **stack_a, t_list **stack_b, t_op_node **ops_head);

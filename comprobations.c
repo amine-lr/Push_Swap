@@ -23,6 +23,7 @@ int	validate_integer_range(const char *str)
 	long	num;
 	int		i;
 	int		neg;
+	long	limit;
 
 	if (!str)
 		return (0);
@@ -40,10 +41,13 @@ int	validate_integer_range(const char *str)
 	if (str[i] < '0' || str[i] > '9')
 		return (0);
 	num = 0;
+	limit = 2147483647;
+	if (neg == 1)
+		limit = 2147483648;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		num = (num * 10) + (str[i] - '0');
-		if (num > 2147483647)
+		if (num > limit)
 			return (0);
 		i++;
 	}

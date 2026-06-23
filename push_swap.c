@@ -154,13 +154,23 @@ static void	sort_four_five(t_list **stack_a, t_list **stack_b, int length,
 	}
 }
 
-static void	normalize_values(int *array, t_list *stack, int length)
+static int	normalize_values(int *array, t_list *stack, int length)
 {
 	t_list	*current;
+	int		*copy;
 	int		i;
 	int		j;
 	int		rank;
 
+	copy = malloc(sizeof(int) * length);
+	if (!copy)
+		return (0);
+	i = 0;
+	while (i < length)
+	{
+		copy[i] = array[i];
+		i++;
+	}
 	current = stack;
 	i = 0;
 	while (i < length)
@@ -169,7 +179,7 @@ static void	normalize_values(int *array, t_list *stack, int length)
 		j = 0;
 		while (j < length)
 		{
-			if (array[j] < current->content)
+			if (copy[j] < current->content)
 				rank++;
 			j++;
 		}
@@ -178,6 +188,21 @@ static void	normalize_values(int *array, t_list *stack, int length)
 		current = current->next;
 		i++;
 	}
+	free(copy);
+	return (1);
+}
+
+static void	run_strategy(t_flags flags, t_list **stack_a, t_list **stack_b,
+		int *array_a, int array_len, t_op_node **operations)
+{
+	if (flags.strategy == SIMPLE)
+		simple_sort(stack_a, stack_b, operations);
+	else if (flags.strategy == MEDIUM)
+		medium_sort(stack_a, stack_b, operations);
+	else if (flags.strategy == COMPLEX)
+		complex_sort(stack_a, stack_b, array_a, array_len, operations);
+	else
+		adaptive_sort(stack_a, stack_b, array_a, array_len, operations);
 }
 
 int	main(int argc, char *argv[])
@@ -218,22 +243,18 @@ int	main(int argc, char *argv[])
 			sort_four_five(&stack_a, &stack_b, array_len, &operations);
 		else
 		{
-			normalize_values(array_a, stack_a, array_len);
-			if (flags.strategy == SIMPLE)
-				simple_sort(&stack_a, &stack_b, &operations);
-			else if (flags.strategy == MEDIUM)
-				medium_sort(&stack_a, &stack_b, &operations);
-			else if (flags.strategy == COMPLEX)
-				complex_sort(&stack_a, &stack_b, array_a, array_len, &operations);
-			else if (flags.strategy == ADAPTIVE)
-				adaptive_sort(&stack_a, &stack_b, array_a, array_len, &operations);
+			if (!normalize_values(array_a, stack_a, array_len))
+			{
+				free_list(stack_a);
+				free(array_a);
+				error_output();
+			}
+			run_strategy(flags, &stack_a, &stack_b, array_a, array_len,
+				&operations);
 		}
 	}
 	print_operations(operations);
-	if (flags.bench == 1)
-	{
-		benchmark_output(array_a, array_len, flags, operations);
-	}
+	benchmark_output(array_a, array_len, flags, operations);
 	free_list(stack_a);
 	free_list(stack_b);
 	free_operations(operations);

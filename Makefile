@@ -21,10 +21,8 @@ SRCS			= push_swap.c \
 				parser.c \
 				comprobations.c \
 				libft_utils.c \
-				simple_sort.c \
-				medium_sort.c \
+				strategies.c \
 				complex_sort.c \
-				adaptive_sort.c \
 				benchmark.c \
 				operations_s_p.c \
 				reverse_operations.c \
