@@ -1,4 +1,4 @@
-#include "push_swap.h"
+#include "../../include/push_swap.h"
 
 static int	is_known_flag(char *arg)
 {

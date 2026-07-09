@@ -9,7 +9,7 @@
 /*   Updated: 2026/06/16 13:09:43 by jangonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "push_swap.h"
+#include "../../include/push_swap.h"
 
 void rra(t_list **stack_a)
 {

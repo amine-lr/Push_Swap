@@ -16,32 +16,36 @@ CFLAGS			= -Wall -Wextra -Werror
 RM				= rm -f
 
 # Source files
-SRCS			= push_swap.c \
-				operations.c \
-				parser.c \
-				comprobations.c \
-				libft_utils.c \
-				strategies.c \
-				complex_sort.c \
-				benchmark.c \
-				operations_s_p.c \
-				reverse_operations.c \
-				other_operations.c
+SRCS			= src/main/main.c \
+				src/main/init.c \
+				src/main/dispatcher.c \
+				src/main/cleanup.c \
+				src/main/small_sort.c \
+				src/operations/operations.c \
+				src/parsing/parser.c \
+				src/parsing/comprobations.c \
+				src/utils/libft_utils.c \
+				src/sorting/strategies.c \
+				src/sorting/complex_sort.c \
+				src/benchmark/benchmark.c \
+				src/operations/operations_s_p.c \
+				src/operations/reverse_operations.c \
+				src/operations/other_operations.c
 
 # Object files
 OBJS			= $(SRCS:.c=.o)
 
 # Header files
-HEADERS			= push_swap.h
+HEADERS			= include/push_swap.h
 
 # Rules
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) -Iinclude -o $(NAME) $(OBJS)
 
 %.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -Iinclude -c $< -o $@
 
 clean:
 	$(RM) $(OBJS)

@@ -1,4 +1,4 @@
-#include "push_swap.h"
+#include "../../include/push_swap.h"
 
 static int	count_operations(t_op_node *ops, char *op_name)
 {
