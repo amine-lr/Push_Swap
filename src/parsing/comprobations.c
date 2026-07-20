@@ -20,10 +20,10 @@ void	error_output(void)
 
 int	validate_integer_range(const char *str)
 {
-	long	num;
+	long long	num;
 	int		i;
 	int		neg;
-	long	limit;
+	long long	limit;
 
 	if (!str)
 		return (0);
@@ -41,9 +41,9 @@ int	validate_integer_range(const char *str)
 	if (str[i] < '0' || str[i] > '9')
 		return (0);
 	num = 0;
-	limit = 2147483647;
+	limit = 2147483647LL;
 	if (neg == 1)
-		limit = 2147483648;
+		limit = 2147483648LL;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		num = (num * 10) + (str[i] - '0');
@@ -53,7 +53,7 @@ int	validate_integer_range(const char *str)
 	}
 	if (neg == 1)
 		num = -num;
-	if (num < -2147483648 || num > 2147483647)
+	if (num < -2147483648LL || num > 2147483647LL)
 		return (0);
 	return (1);
 }
@@ -94,12 +94,12 @@ int stack_a_is_correct(char *stack_a)
     i++;
   if (i == len)
 	return (1);
-  while (i < len)
-  {
-    if(stack_a[i] < '0' || stack_a[i] > '9')
-      return (1);
+  while (i < len && stack_a[i] >= '0' && stack_a[i] <= '9')
     i++;
-  }
+  while (i < len && (stack_a[i] == ' ' || (stack_a[i] >= 9 && stack_a[i] <= 13)))
+    i++;
+  if (i != len)
+    return (1);
   return (0);
 }
 

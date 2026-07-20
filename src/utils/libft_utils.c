@@ -28,7 +28,7 @@ size_t  ft_strlen(const char *s)
   return (num);
 }
 
-static long  ft_putnum(const char *str, long num, int i, int neg)
+static long long  ft_putnum(const char *str, long long num, int i, int neg)
 {
   while (str[i] >= '0' && str[i] <= '9')
   {
@@ -43,7 +43,7 @@ static long  ft_putnum(const char *str, long num, int i, int neg)
 int ft_atoi(const char *nptr)
 {
   int i;
-  long num;
+  long long num;
   int neg;
 
   i = 0;
