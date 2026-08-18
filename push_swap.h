@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jangonza <jangonza@student.42urduliz.com>  +#+  +:+       +#+        */
+/*   By: jangonza <jangonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/27 00:00:00 by jangonza          #+#    #+#             */
-/*   Updated: 2026/07/27 00:00:00 by jangonza         ###   ########.fr       */
+/*   Updated: 2026/08/17 13:06:49 by jangonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ typedef enum e_strategy
 	SIMPLE,
 	MEDIUM,
 	COMPLEX,
+	ADAPTIVE_SIMPLE,
+	ADAPTIVE_MEDIUM,
+	ADAPTIVE_COMPLEX,
 	ADAPTIVE
 }	t_strategy;
 

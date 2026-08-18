@@ -53,17 +53,14 @@ void	adaptive_sort(t_sort_data *data)
 	d = calculate_disorder_percentage(data->array, data->length);
 	if (d < 0.2)
 	{
-		/* Low disorder: use simple/specialized small-moves strategy */
 		simple_sort(data->stack_a, data->stack_b, data->operations);
 	}
 	else if (d < 0.5)
 	{
-		/* Medium disorder */
 		medium_sort(data->stack_a, data->stack_b, data->operations);
 	}
 	else
 	{
-		/* High disorder */
 		complex_sort(data);
 	}
 }

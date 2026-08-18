@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jangonza <jangonza@student.42urduliz.com>  +#+  +:+       +#+        */
+/*   By: jangonza <jangonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 13:12:58 by jangonza          #+#    #+#             */
-/*   Updated: 2026/07/27 00:00:00 by jangonza         ###   ########.fr       */
+/*   Updated: 2026/08/17 13:07:02 by jangonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,27 +68,27 @@ int	main(int argc, char *argv[])
 {
 	t_flags		flags;
 	t_sort_data	data;
-	t_strategy	actual_strategy;
+	t_strategy	act_strat;
 
 	if (argc < 2)
 		return (0);
 	if (!initialize_data(argc, argv, &flags, &data))
 		error_output();
-	actual_strategy = flags.strategy;
+	act_strat = flags.strategy;
 	if (data.length <= 5)
-		actual_strategy = SIMPLE;
+		act_strat = ADAPTIVE_SIMPLE;
 	else if (flags.strategy == ADAPTIVE && data.length > 5)
 	{
 		if (calculate_disorder_percentage(data.array, data.length) < 0.5)
-			actual_strategy = MEDIUM;
+			act_strat = ADAPTIVE_MEDIUM;
 		else
-			actual_strategy = COMPLEX;
+			act_strat = ADAPTIVE_COMPLEX;
 	}
 	ft_array_to_list(data.array, data.stack_a, data.length);
 	sort_data(flags, &data);
 	print_operations(*data.operations);
 	if (flags.bench)
-		benchmark_output(data.array, data.length, actual_strategy, *data.operations);
+		benchmark_output(data.array, data.length, act_strat, *data.operations);
 	free_data(&data);
 	return (0);
 }

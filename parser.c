@@ -65,6 +65,68 @@ int	*transform_argv(char **argv, int *length)
 
 	if (!argv || !length || *length < 1)
 		return (NULL);
+	if (*length == 1)
+	{
+		const char *s = argv[0];
+		int i = 0;
+		int tok_count = 0;
+
+		while (s[i])
+		{
+			while (s[i] == ' ' || (s[i] >= 9 && s[i] <= 13))
+				i++;
+			if (!s[i])
+				break;
+			tok_count++;
+			while (s[i] && !(s[i] == ' ' || (s[i] >= 9 && s[i] <= 13)))
+				i++;
+		}
+		if (tok_count > 1)
+		{
+			stack_a = malloc(sizeof(int) * tok_count);
+			if (!stack_a)
+				return (NULL);
+			i = 0;
+			index = 0;
+			while (s[i])
+			{
+				int start;
+				int len;
+				char *token;
+
+				while (s[i] == ' ' || (s[i] >= 9 && s[i] <= 13))
+					i++;
+				if (!s[i])
+					break;
+				start = i;
+				len = 0;
+				while (s[i] && !(s[i] == ' ' || (s[i] >= 9 && s[i] <= 13)))
+				{
+					i++;
+					len++;
+				}
+				token = malloc(len + 1);
+				if (!token)
+				{
+					free(stack_a);
+					return (NULL);
+				}
+				for (int k = 0; k < len; k++)
+					token[k] = s[start + k];
+				token[len] = '\0';
+				if (stack_a_is_correct(token) || !validate_integer_range(token))
+				{
+					free(token);
+					free(stack_a);
+					return (NULL);
+				}
+				stack_a[index++] = ft_atoi(token);
+				free(token);
+			}
+			*length = tok_count;
+			return (stack_a);
+		}
+	}
 	stack_a = malloc(sizeof(int) * *length);
 	if (!stack_a)
 		return (NULL);
