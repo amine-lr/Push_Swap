@@ -59,6 +59,7 @@ int			stack_a_is_correct(char *stack_a);
 int			*transform_argv(char **argv, int *length);
 void		ft_array_to_list(int *array_a, t_list **stack_a, int length);
 int			validate_integer_range(const char *str);
+int			*parse_tokens(const char *s, int *out_len);
 void		error_output(void);
 size_t		ft_strlen(const char *s);
 int			ft_atoi(const char *nptr);

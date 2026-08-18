@@ -24,6 +24,7 @@ SRCS			= main.c \
 				small_sort_utils.c\
 				operations.c \
 				parser.c \
+				parser_utils.c \
 				comprobations.c \
 				libft_utils.c \
 				string_utils.c \
